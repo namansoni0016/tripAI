@@ -1,17 +1,26 @@
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { Poppins } from "next/font/google";
+import { cn } from "@/lib/utils";
+import { RegisterButton } from "@/components/auth/register-button";
+
+const font = Poppins({
+  subsets: ["latin"],
+  weight: ["600"]
+})
 
 export default function Home() {
   return (
     <main className="flex h-full flex-col items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-800 to-black">
-      <div className="space-y-1 text-center text-gray-200">
-        <h1 className="text-6xl font-semibold">
-          Welcome to, <span className="text-6xl font-semibold text-red-600 drop-shadow-md">TripAI</span>
+      <div className="space-y-2 text-center">
+        <h1 className={cn("text-6xl font-semibold text-white drop-shadow-md", font.className)}>
+          Welcome to, <span className="text-6xl font-semibold text-red-600">TripAI</span>
         </h1>
-        <p className="text-xl font-medium">Your journey, magically planned!</p>
-        <Button asChild variant="link">
-          <Link href="/register" className="text-xl text-blue-400 hover:text-blue-700">Get started...</Link>
-        </Button>
+        <p className="text-white text-lg">Your journey, magically planned!</p>
+        <div>
+          <RegisterButton>
+            <Button className="text-lg" size="lg" variant="secondary">Get Started</Button>
+          </RegisterButton>
+        </div>
       </div>
     </main>
   );
