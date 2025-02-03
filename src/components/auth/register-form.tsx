@@ -43,7 +43,7 @@ export const RegisterForm = () => {
     }
     return (
         <CardWrapper headerTitle="Create an account" headerLabel="Welcome to TripAI, Adventure Awaits!"
-            backButtonLabel="Don't have an account?" backButtonHref="/auth/login" showSocial
+            backButtonLabel="Already have an account?" backButtonHref="/auth/login" showSocial
         >
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
