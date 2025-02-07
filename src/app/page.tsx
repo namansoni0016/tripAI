@@ -3,7 +3,7 @@ import { Poppins } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { RegisterButton } from "@/components/auth/register-button";
-import { useSession } from "next-auth/react";
+import { useCurrentUser } from "../../hooks/use-current-user";
 import AuthenticatedHome from "@/components/auth/AuthenticatedHome";
 
 const font = Poppins({
@@ -12,10 +12,10 @@ const font = Poppins({
 })
 
 export default function Home() {
-  const session = useSession();
+  const user = useCurrentUser();
   return (
     <>
-      {session.data ? (
+      {user ? (
         <AuthenticatedHome />
       ) : (
       <main className="flex h-full flex-col items-center justify-center">
