@@ -1,9 +1,10 @@
-import { auth } from "@/auth";
+"use client";
 import PrivateNavbar from "@/components/Navbar/PrivateNavbar";
 import PublicNavbar from "@/components/Navbar/PublicNavbar";
+import { useSession } from "next-auth/react";
 
-const Navbar = async () => {
-    const session = await auth();
+const Navbar = () => {
+    const { data: session, status } = useSession();
     return (
         <>
             {session ? (

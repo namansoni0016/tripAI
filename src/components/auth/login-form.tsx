@@ -19,8 +19,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
+import { useRouter } from "next/navigation";
+import { getSession } from "next-auth/react";
+import { DEFAULT_LOGIN_REDIRECT } from "../../../routes";
 
 export const LoginForm = () => {
+    const router = useRouter();
     const searchParams = useSearchParams();
     const urlError = searchParams.get("error") === "OAuthAccoundNotLinked" ? "Email already in use with different provider!" : "";
     const [error, setError] = useState<string | undefined>("");
@@ -37,9 +41,15 @@ export const LoginForm = () => {
         setError("");
         setSuccess("");
         startTransition(() => {
-            login(values).then((data) => { 
-                setError(data?.error)
-                setSuccess(data?.success)
+            login(values).then(async (data) => { 
+                if(data?.error) {
+                    setError(data.error);
+                } else {
+                    setSuccess(data?.success);
+                    await getSession();
+                    router.refresh();
+                    router.push(DEFAULT_LOGIN_REDIRECT);
+                }
             })
         })
     }
