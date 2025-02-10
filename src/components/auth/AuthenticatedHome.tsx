@@ -1,20 +1,58 @@
 "use client";
 import { IoIosSend } from "react-icons/io";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { QUERY_DATA } from "@/constants/data";
 
 const AuthenticatedHome = () => {
     const [query, setQuery] = useState("");
+    const [response, setResponse] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [displayText, setDisplayText] = useState("");
+    const fetchResponse = async () => {
+        setLoading(true);
+        setResponse("");
+        setDisplayText("");
+        setTimeout(() => {
+            const generatedResponse = QUERY_DATA;
+            setResponse(generatedResponse);
+            setLoading(false);
+        }, 2000);
+    };
+    useEffect(() => {
+        if(response) {
+            let index = 0;
+            const interval = setInterval(() => {
+                if(index < response.length) {
+                    setDisplayText((prev) => prev + response[index]);
+                    index++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 10);
+            return () => clearInterval(interval);
+        }
+    }, [response]);
     return (
-        <div className="flex flex-col items-center justify-center mt-8">
+        <div className="flex flex-col items-center justify-center mt-4">
             <h2 className="text-4xl font-bold text-white">Generate your perfect trip!</h2>
             <div className="flex flex-row mt-4 w-[800px] bg-white border-none rounded-full px-4 py-2 items-center">
                 <textarea placeholder="Message TripAI" value={query} onChange={(e) => setQuery(e.target.value)}
                     className="flex-1 py-3 px-3 rounded-full border-none focus-visible:ring-0 text-lg bg-white max-h-[200px] min-h-[50px] outline-none overflow-y-auto resize-none"
                     rows={1} />
-                <Button variant={"outline"} className="flex items-center justify-center rounded-full border-none shadow-none p-3">
+                <Button onClick={fetchResponse} variant={"outline"} className="flex items-center justify-center rounded-full border-none shadow-none p-3" disabled={!query || loading}>
                     <IoIosSend className="w-10 h-10 text-gray-600 cursor-pointer hover:text-gray-500 transition-colors duration-300 transform scale-150"/>
                 </Button>
+            </div>
+            <div className="flex">
+                {response ? (
+                    <Card className="w-[800px] max-h-[500px] overflow-y-auto rounded-xl mt-4 mb-10 border-none transition-all duration-300">
+                        <CardContent className="p-4">
+                            <p className="whitespace-pre-line">{displayText}</p>
+                        </CardContent>
+                    </Card>
+                ) : null}
             </div>
         </div>
     );
