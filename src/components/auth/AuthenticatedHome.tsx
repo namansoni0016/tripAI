@@ -10,10 +10,12 @@ const AuthenticatedHome = () => {
     const [response, setResponse] = useState("");
     const [loading, setLoading] = useState(false);
     const [displayText, setDisplayText] = useState("");
+    const [textGenerated, setTextGenerated] = useState(false);
     const fetchResponse = async () => {
         setLoading(true);
         setResponse("");
         setDisplayText("");
+        setTextGenerated(false);
         setTimeout(() => {
             const generatedResponse = QUERY_DATA;
             setResponse(generatedResponse);
@@ -29,6 +31,7 @@ const AuthenticatedHome = () => {
                     index++;
                 } else {
                     clearInterval(interval);
+                    setTextGenerated(true);
                 }
             }, 10);
             return () => clearInterval(interval);
@@ -45,15 +48,20 @@ const AuthenticatedHome = () => {
                     <IoIosSend className="w-10 h-10 text-gray-600 cursor-pointer hover:text-gray-500 transition-colors duration-300 transform scale-150"/>
                 </Button>
             </div>
-            <div className="flex">
-                {response ? (
-                    <Card className="w-[800px] max-h-[500px] overflow-y-auto rounded-xl mt-4 mb-10 border-none transition-all duration-300">
+            {response && (
+                <div className="flex flex-col items-center">
+                    <Card className="w-[800px] max-h-[460px] overflow-y-auto rounded-xl mt-4 mb-2 border-none transition-all duration-300">
                         <CardContent className="p-4">
                             <p className="whitespace-pre-line">{displayText}</p>
                         </CardContent>
                     </Card>
-                ) : null}
-            </div>
+                    {textGenerated && (
+                        <Button variant="secondary" className="text-lg text-slate-700 font-semibold p-5 rounded-full mt-2 transition-transform duration-300 ease-in-out hover:translate-y-1">
+                            Save Trip
+                        </Button>
+                    )}
+                </div>
+            )}
         </div>
     );
 }
