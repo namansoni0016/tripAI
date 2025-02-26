@@ -1,13 +1,11 @@
+"use server";
 import { db } from "@/lib/db";
-import { auth } from "@/auth";
 
-export async function createSavedQuery(queryText: string, response: string) {
+export async function createSavedQuery(userId: string, queryText: string, response: string) {
     try {
-        const session = await auth();
-        if(!session || !session.user?.id) {
-            return { success: false, error: "User not authenticated!" };
+        if(!userId) {
+            return { success: false, error: "User Id is required" };
         }
-        const userId = session.user.id;
         const generatedQuery = await db.query.create({
             data: {
                 queryText,

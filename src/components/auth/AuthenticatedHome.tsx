@@ -4,14 +4,23 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { QUERY_DATA } from "@/constants/data";
+import { createSavedQuery } from "@/actions/query";
+import { useSession } from "next-auth/react";
 
 const AuthenticatedHome = () => {
+    const { data: session } = useSession();
     const [query, setQuery] = useState("");
     const [response, setResponse] = useState("");
     const [loading, setLoading] = useState(false);
     const [displayText, setDisplayText] = useState("");
+    const [isSaving, setIsSaving] = useState(false);
     const [textGenerated, setTextGenerated] = useState(false);
+    const userId = session?.user?.id;
     const fetchResponse = async () => {
+        if(!userId) {
+            console.error("User not authenticated!");
+            return;
+        }
         setLoading(true);
         setResponse("");
         setDisplayText("");
@@ -37,6 +46,26 @@ const AuthenticatedHome = () => {
             return () => clearInterval(interval);
         }
     }, [response]);
+    const handleSubmit = async() => {
+        if(!userId) {
+            console.error("User not authenticated!");
+            return;
+        }
+        if(!displayText.trim()) return;
+        setIsSaving(true);
+        try {
+            const saved = await createSavedQuery(userId, query, displayText);
+            if(saved?.success) {
+                setQuery("");
+                setDisplayText("");
+                setResponse("");
+            }
+        } catch (error) {
+            console.log("Failed to save post: ", error);
+        } finally {
+            setIsSaving(false);
+        }
+    }
     return (
         <div className="flex flex-col items-center justify-center mt-4">
             <h2 className="text-4xl font-bold text-white">Generate your perfect trip!</h2>
@@ -56,7 +85,7 @@ const AuthenticatedHome = () => {
                         </CardContent>
                     </Card>
                     {textGenerated && (
-                        <Button variant="secondary" className="text-lg text-slate-700 font-semibold p-5 rounded-full mt-2 transition-transform duration-300 ease-in-out hover:translate-y-1">
+                        <Button variant="secondary" onClick={handleSubmit} disabled={!displayText.trim() || isSaving} className="text-lg text-slate-700 font-semibold p-5 rounded-full mt-2 transition-transform duration-300 ease-in-out hover:translate-y-1">
                             Save Trip
                         </Button>
                     )}
