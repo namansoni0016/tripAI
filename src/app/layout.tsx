@@ -4,6 +4,7 @@ import { SessionProvider } from "next-auth/react";
 import Navbar from "@/components/Navbar/Navbar";
 import { auth } from "@/auth";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -33,6 +34,7 @@ export default async function RootLayout({
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-700 to-black h-[580px] md:h-[700px]`}>
           <Navbar />
           {children}
+          <Toaster />
         </body>
       </html>
     </SessionProvider>
