@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { QUERY_DATA } from "@/constants/data";
 import { createSavedQuery } from "@/actions/query";
 import { useSession } from "next-auth/react";
+import toast from "react-hot-toast";
 
 const AuthenticatedHome = () => {
     const { data: session } = useSession();
@@ -59,12 +60,19 @@ const AuthenticatedHome = () => {
                 setQuery("");
                 setDisplayText("");
                 setResponse("");
+                toast.success("Trip saved successfully!");
             }
         } catch (error) {
-            console.log("Failed to save post: ", error);
+            console.log("Failed to save trip: ", error);
+            toast.error("Failed to save trip!");
         } finally {
             setIsSaving(false);
         }
+    }
+    const handleClear = () => {
+        setQuery("");
+        setDisplayText("");
+        setResponse("");
     }
     return (
         <div className="flex flex-col items-center justify-center mt-4">
@@ -85,9 +93,14 @@ const AuthenticatedHome = () => {
                         </CardContent>
                     </Card>
                     {textGenerated && (
-                        <Button variant="secondary" onClick={handleSubmit} disabled={!displayText.trim() || isSaving} className="text-lg text-slate-700 font-semibold p-5 rounded-full mt-2 transition-transform duration-300 ease-in-out hover:translate-y-1">
-                            Save Trip
-                        </Button>
+                        <div className="flex space-x-4">
+                            <Button variant="secondary" onClick={handleSubmit} disabled={!displayText.trim() || isSaving} className="text-lg text-slate-700 font-semibold p-5 rounded-full mt-2 transition-transform duration-300 ease-in-out hover:translate-y-1">
+                                Save Trip
+                            </Button>
+                            <Button variant="secondary" onClick={handleClear} className="text-lg text-slate-700 font-semibold p-5 rounded-full mt-2 transition-transform duration-300 ease-in-out hover:translate-y-1">
+                                Clear
+                            </Button>
+                        </div>
                     )}
                 </div>
             )}

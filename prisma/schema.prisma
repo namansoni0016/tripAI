@@ -40,9 +40,10 @@ model Account {
 
 model Query {
   id        String   @id @default(cuid())
-  userId    String   @unique
+  userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   queryText String
   response  String
   created   DateTime @default(now())
+  @@index([userId])
 }
