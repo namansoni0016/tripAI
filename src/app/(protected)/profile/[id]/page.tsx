@@ -1,6 +1,7 @@
-import { getProfileById } from "@/actions/profile";
+import { getProfileById, getSavedQueries } from "@/actions/profile";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import ProfilePageContent from "./ProfilePageContent";
 
 export async function generateMetadata({params} : {params: { id: string }}): Promise<Metadata> {
     const user = await getProfileById(params.id);
@@ -13,11 +14,11 @@ export async function generateMetadata({params} : {params: { id: string }}): Pro
 async function ProfilePage({params}: {params: {id: string}}) {
     const user = await getProfileById(params.id);
     if(!user) notFound();
-    // const [queries] = await Promise.all([
-    //     getSavedQueries(user.id);
-    // ]) 
+    const [queries] = await Promise.all([
+        getSavedQueries(user.id),
+    ]) 
     return (
-        <div>Profile Page</div>
+        <ProfilePageContent user={user} queries={queries} />
     )
 }
 
