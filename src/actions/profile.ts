@@ -89,3 +89,19 @@ export async function updateProfile(formData: FormData) {
         return { success: false, error: "Failed to update profile" };
     }
 }
+
+export async function getQueryById(queryId: string) {
+    try {
+        const query = await db.query.findUnique({
+            where: { id: queryId },
+            select: {
+                queryText: true,
+                response: true,
+            },
+        });
+        return query;
+    } catch (error) {
+        console.log("Error fetch query by id: ", error);
+        throw new Error("Failed to saved trip");
+    }
+}

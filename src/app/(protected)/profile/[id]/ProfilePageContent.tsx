@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EditIcon, FileTextIcon } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -42,14 +43,14 @@ function ProfilePageContent({user, queries} : ProfilePageContentProps) {
         <div className="w-full mt-10 mx-auto">
             <div className="grid grid-cols-1 gap-6">
                 <div className="w-full max-w-lg mx-auto">
-                    <Card className="bg-card">
+                    <Card className="bg-transparent">
                         <CardContent className="pt-6">
                             <div className="flex flex-col items-center text-center">
-                                <Avatar className="w-24 h-24">
-                                    <AvatarImage src={user.image ?? "/avatar.png"} alt="Profile" className="w-24 h-24 rounded-full" />
+                                <Avatar className="w-28 h-28">
+                                    <img src={user.image ?? "/avatar.png"} alt="Profile" className="w-28 h-28 rounded-full" />
                                 </Avatar>
-                                <h1 className="mt-4 text-2xl font-bold text-slate-800">{user.name}</h1>
-                                <p className="text-muted-foreground">Email: {user.email}</p>
+                                <h1 className="mt-4 text-3xl font-bold text-white">{user.name}</h1>
+                                <p className="text-white">Email: {user.email}</p>
                                 <Button variant="outline" className="w-full mt-4" onClick={() => setShowEditDialog(true)}>
                                     <EditIcon className="size-4 mr-2" />
                                     Edit Profile
@@ -60,15 +61,22 @@ function ProfilePageContent({user, queries} : ProfilePageContentProps) {
                 </div>
                 <Tabs className="w-full" defaultValue="queries">
                     <TabsList className="w-full justify-center border-b rounded-none h-auto p-0 bg-transparent">
-                        <TabsTrigger value="queries" className="flex items-center gap-2 rounded-none data-[state=activa]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-white px-6 font-semibold text-xl ">
+                        <TabsTrigger value="queries" className="flex items-center gap-2 rounded-none data-[state=activa]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-white px-6 font-semibold text-3xl ">
                             <FileTextIcon className="size-4" />
-                            Saved Trips
+                            Saved <span className="text-red-600">Trips</span>
                         </TabsTrigger>
                     </TabsList>
                     <TabsContent value="queries" className="mt-6">
                         <div className="space-y-6 mx-48">
                             {queries.length > 0 ? (
-                                queries.map((query) => <h1 key={query.id} className="text-white font-bold border rounded-xl h-24 text-center">{query.queryText}</h1>)
+                                queries.map((query) => (
+                                    <div key={query.id} className="flex flex-col items-start border rounded-xl w-full h-[160px]">
+                                        <Link href={`/profile/${user.id}/saved-trips/${query.id}`}>
+                                            <h1 className="text-xl text-white font-semibold text-center mt-2 ml-4 border-b">{query.queryText}</h1>
+                                        </Link>
+                                        <p className="text-muted-foreground mx-4 mt-2 line-clamp-4">{query.response}</p>
+                                    </div>
+                                ))
                             ) : (
                                 <div className="text-center py-8 text-muted-foreground">No saved trips</div>
                             )}
