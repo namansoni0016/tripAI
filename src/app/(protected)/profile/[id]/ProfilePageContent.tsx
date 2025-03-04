@@ -1,5 +1,6 @@
 "use client";
-import { getProfileById, getSavedQueries, updateProfile } from "@/actions/profile";
+import { deleteSavedTrip, getProfileById, getSavedQueries, updateProfile } from "@/actions/profile";
+import { DeleteDialog } from "@/components/DeleteDialog";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,7 +8,7 @@ import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from "@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { EditIcon, FileTextIcon } from "lucide-react";
+import { DeleteIcon, EditIcon, FileTextIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -23,6 +24,7 @@ interface ProfilePageContentProps {
 function ProfilePageContent({user, queries} : ProfilePageContentProps) {
     const isOAuthUser = user.provider === "google";
     const [showEditDialog, setShowEditDialog] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
     const [editForm, setEditForm] = useState({
         name: user.name || "",
         email: user.email || "",
@@ -37,6 +39,19 @@ function ProfilePageContent({user, queries} : ProfilePageContentProps) {
         if(result.success) {
             setShowEditDialog(false);
             toast.success("Profile updated successfully!");
+        }
+    }
+    const handleDelete = async (queryId: string) => {
+        if(isDeleting) return;
+        try {
+            setIsDeleting(true);
+            const result = await deleteSavedTrip(queryId);
+            if(result.success) toast.success("Trip deleted successfully!");
+            else throw new Error(result.error);
+        } catch (error) {
+            toast.error("Failed to delete trip!");
+        } finally {
+            setIsDeleting(false);
         }
     }
     return (
@@ -70,10 +85,13 @@ function ProfilePageContent({user, queries} : ProfilePageContentProps) {
                         <div className="space-y-6 mx-48">
                             {queries.length > 0 ? (
                                 queries.map((query) => (
-                                    <div key={query.id} className="flex flex-col items-start border rounded-xl w-full h-[160px]">
-                                        <Link href={`/profile/${user.id}/saved-trips/${query.id}`}>
-                                            <h1 className="text-xl text-white font-semibold text-center mt-2 ml-4 border-b">{query.queryText}</h1>
-                                        </Link>
+                                    <div key={query.id} className="flex flex-col border rounded-xl w-full h-[160px]">
+                                        <div className="flex items-start justify-between">
+                                            <Link href={`/profile/${user.id}/saved-trips/${query.id}`}>
+                                                <h1 className="text-xl text-white font-semibold text-center mt-2 ml-4 border-b">{query.queryText}</h1>
+                                            </Link>
+                                            <DeleteDialog isDeleting={isDeleting} onDelete={() => handleDelete(query.id)} />
+                                        </div>
                                         <p className="text-muted-foreground mx-4 mt-2 line-clamp-4">{query.response}</p>
                                     </div>
                                 ))

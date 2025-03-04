@@ -105,3 +105,27 @@ export async function getQueryById(queryId: string) {
         throw new Error("Failed to saved trip");
     }
 }
+
+export async function deleteSavedTrip(queryId: string) {
+    try {
+        const session = await auth();
+        if(!session || !session.user) {
+            throw new Error("Unauthorized");
+        }
+        const userId = session.user.id;
+        const savedTrip = await db.query.findUnique({
+            where: { id: queryId },
+            select: { userId: true },
+        });
+        if(!savedTrip) throw new Error("Trip not found!");
+        if(savedTrip.userId !== userId) throw new Error("Unauthorized - no delete permission!");
+        await db.query.delete({
+            where: { id: queryId },
+        });
+        revalidatePath(`/profile/${userId}`);
+        return { success: true };
+    } catch (error) {
+        console.log("Failed to delete trip: ", error);
+        return { success: false, error: "Failed to delete trip!" };
+    }
+}
