@@ -4,7 +4,7 @@ import PublicNavbar from "@/components/Navbar/PublicNavbar";
 import { useSession } from "next-auth/react";
 
 const Navbar = () => {
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
     return (
         <>
             {session ? (
