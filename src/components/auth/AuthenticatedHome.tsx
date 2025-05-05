@@ -7,6 +7,8 @@ import { QUERY_DATA } from "@/constants/data";
 import { createSavedQuery } from "@/actions/query";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
+import { aiGeneration } from "@/actions/gemini";
+import ReactMarkdown from 'react-markdown';
 
 const AuthenticatedHome = () => {
     const { data: session } = useSession();
@@ -26,8 +28,8 @@ const AuthenticatedHome = () => {
         setResponse("");
         setDisplayText("");
         setTextGenerated(false);
-        setTimeout(() => {
-            const generatedResponse = QUERY_DATA;
+        setTimeout(async () => {
+            const generatedResponse = await aiGeneration(query);
             setResponse(generatedResponse);
             setLoading(false);
         }, 2000);
@@ -89,7 +91,11 @@ const AuthenticatedHome = () => {
                 <div className="flex flex-col items-center">
                     <Card className="w-[800px] max-h-[460px] overflow-y-auto rounded-xl mt-4 mb-2 border-none transition-all duration-300">
                         <CardContent className="p-4">
-                            <p className="whitespace-pre-line">{displayText}</p>
+                            <p className="whitespace-pre-line">
+                                <ReactMarkdown>
+                                    {displayText}
+                                </ReactMarkdown>
+                            </p>
                         </CardContent>
                     </Card>
                     {textGenerated && (

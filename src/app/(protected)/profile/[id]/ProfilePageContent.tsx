@@ -1,17 +1,18 @@
 "use client";
 import { deleteSavedTrip, getProfileById, getSavedQueries, updateProfile } from "@/actions/profile";
 import { DeleteDialog } from "@/components/DeleteDialog";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DeleteIcon, EditIcon, FileTextIcon } from "lucide-react";
+import { EditIcon, FileTextIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import ReactMarkdown from 'react-markdown';
 
 type User = Awaited<ReturnType<typeof getProfileById>>;
 type Queries = Awaited<ReturnType<typeof getSavedQueries>>;
@@ -92,7 +93,11 @@ function ProfilePageContent({user, queries} : ProfilePageContentProps) {
                                             </Link>
                                             <DeleteDialog isDeleting={isDeleting} onDelete={() => handleDelete(query.id)} />
                                         </div>
-                                        <p className="text-muted-foreground mx-4 mt-2 line-clamp-4">{query.response}</p>
+                                        <p className="text-muted-foreground mx-4 mt-2 line-clamp-4">
+                                            <ReactMarkdown>
+                                                {query.response}
+                                            </ReactMarkdown>
+                                        </p>
                                     </div>
                                 ))
                             ) : (
