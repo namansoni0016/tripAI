@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import ReactMarkdown from 'react-markdown';
 
 interface SavedTripProps {
     params: { queryId: string };
@@ -32,7 +33,11 @@ export default function SavedTrip({ params } : SavedTripProps) {
             <h2 className="text-4xl font-bold text-white">{query?.queryText}</h2>
             <Card className="w-[800px] max-h-[540px] overflow-y-auto rounded-xl mt-4 mb-2 border-none">
                 <CardContent className="px-4 py-2">
-                    <p className="whitespace-pre-line">{query?.response}</p>
+                    <p className="whitespace-pre-line">
+                        <ReactMarkdown>
+                            {query?.response}
+                        </ReactMarkdown>
+                    </p>
                 </CardContent>
             </Card>
             <Link href={`/profile/${userId}`}>

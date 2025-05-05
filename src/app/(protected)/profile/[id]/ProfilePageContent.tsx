@@ -62,9 +62,7 @@ function ProfilePageContent({user, queries} : ProfilePageContentProps) {
                     <Card className="bg-transparent">
                         <CardContent className="pt-6">
                             <div className="flex flex-col items-center text-center">
-                                <Avatar className="w-28 h-28">
-                                    <img src={user.image ?? "/avatar.png"} alt="Profile" className="w-28 h-28 rounded-full" />
-                                </Avatar>
+                                <img src={user.image ?? "/avatar.png"} alt="Profile" className="w-28 h-28 rounded-full" />
                                 <h1 className="mt-4 text-3xl font-bold text-white">{user.name}</h1>
                                 <p className="text-white">Email: {user.email}</p>
                                 <Button variant="outline" className="w-full mt-4" onClick={() => setShowEditDialog(true)}>
