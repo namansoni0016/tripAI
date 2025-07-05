@@ -1,7 +1,7 @@
 "use client";
+
 import { deleteSavedTrip, getProfileById, getSavedQueries, updateProfile } from "@/actions/profile";
 import { DeleteDialog } from "@/components/DeleteDialog";
-import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EditIcon, FileTextIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -62,7 +63,7 @@ function ProfilePageContent({user, queries} : ProfilePageContentProps) {
                     <Card className="bg-transparent">
                         <CardContent className="pt-6">
                             <div className="flex flex-col items-center text-center">
-                                <img src={user.image ?? "/avatar.png"} alt="Profile" className="w-28 h-28 rounded-full" />
+                                <Image src={user.image?.startsWith("http") ? user.image : "/avatar.png"} alt="Profile" width="112" height="112" className="w-28 h-28 rounded-full" />
                                 <h1 className="mt-4 text-3xl font-bold text-white">{user.name}</h1>
                                 <p className="text-white">Email: {user.email}</p>
                                 <Button variant="outline" className="w-full mt-4" onClick={() => setShowEditDialog(true)}>
@@ -91,11 +92,11 @@ function ProfilePageContent({user, queries} : ProfilePageContentProps) {
                                             </Link>
                                             <DeleteDialog isDeleting={isDeleting} onDelete={() => handleDelete(query.id)} />
                                         </div>
-                                        <p className="text-muted-foreground mx-4 mt-2 line-clamp-4">
+                                        <div className="text-muted-foreground mx-4 mt-2 line-clamp-4">
                                             <ReactMarkdown>
                                                 {query.response}
                                             </ReactMarkdown>
-                                        </p>
+                                        </div>
                                     </div>
                                 ))
                             ) : (
