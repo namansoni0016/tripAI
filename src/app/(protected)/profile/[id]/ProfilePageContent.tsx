@@ -66,7 +66,7 @@ function ProfilePageContent({user, queries} : ProfilePageContentProps) {
                                 <Image src={user.image?.startsWith("http") ? user.image : "/avatar.png"} alt="Profile" width="112" height="112" className="w-28 h-28 rounded-full" />
                                 <h1 className="mt-4 text-3xl font-bold text-white">{user.name}</h1>
                                 <p className="text-white">Email: {user.email}</p>
-                                <Button variant="outline" className="w-full mt-4" onClick={() => setShowEditDialog(true)}>
+                                <Button variant="outline" className="w-full mt-4 text-md font-semibold" onClick={() => setShowEditDialog(true)}>
                                     <EditIcon className="size-4 mr-2" />
                                     Edit Profile
                                 </Button>
@@ -81,27 +81,29 @@ function ProfilePageContent({user, queries} : ProfilePageContentProps) {
                             Saved <span className="text-red-600">Trips</span>
                         </TabsTrigger>
                     </TabsList>
-                    <TabsContent value="queries" className="mt-6">
-                        <div className="space-y-6 mx-48">
-                            {queries.length > 0 ? (
-                                queries.map((query) => (
-                                    <div key={query.id} className="flex flex-col border rounded-xl w-full h-[160px]">
-                                        <div className="flex items-start justify-between">
-                                            <Link href={`/profile/${user.id}/saved-trips/${query.id}`}>
-                                                <h1 className="text-xl text-white font-semibold text-center mt-2 ml-4 border-b">{query.queryText}</h1>
-                                            </Link>
-                                            <DeleteDialog isDeleting={isDeleting} onDelete={() => handleDelete(query.id)} />
+                    <TabsContent value="queries" className="mt-6 mb-6">
+                        <div className="mx-48">
+                            <div className="space-y-6 h-[calc(100vh-540px)] overflow-y-auto pr-2">
+                                {queries.length > 0 ? (
+                                    queries.map((query) => (
+                                        <div key={query.id} className="flex flex-col border rounded-xl w-full min-h-[160px]">
+                                            <div className="flex items-start justify-between">
+                                                <Link href={`/profile/${user.id}/saved-trips/${query.id}`}>
+                                                    <h1 className="text-xl text-white font-semibold text-center mt-2 ml-4 border-b">{query.queryText}</h1>
+                                                </Link>
+                                                <DeleteDialog isDeleting={isDeleting} onDelete={() => handleDelete(query.id)} />
+                                            </div>
+                                            <div className="text-muted-foreground mx-4 mt-2 line-clamp-4">
+                                                <ReactMarkdown>
+                                                    {query.response}
+                                                </ReactMarkdown>
+                                            </div>
                                         </div>
-                                        <div className="text-muted-foreground mx-4 mt-2 line-clamp-4">
-                                            <ReactMarkdown>
-                                                {query.response}
-                                            </ReactMarkdown>
-                                        </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <div className="text-center py-8 text-muted-foreground">No saved trips</div>
-                            )}
+                                    ))
+                                ) : (
+                                    <div className="text-center py-8 text-muted-foreground">No saved trips</div>
+                                )}
+                            </div>
                         </div>
                     </TabsContent>
                 </Tabs>
