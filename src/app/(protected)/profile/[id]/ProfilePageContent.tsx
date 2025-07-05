@@ -1,17 +1,19 @@
 "use client";
+
 import { deleteSavedTrip, getProfileById, getSavedQueries, updateProfile } from "@/actions/profile";
 import { DeleteDialog } from "@/components/DeleteDialog";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DeleteIcon, EditIcon, FileTextIcon } from "lucide-react";
+import { EditIcon, FileTextIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import ReactMarkdown from 'react-markdown';
 
 type User = Awaited<ReturnType<typeof getProfileById>>;
 type Queries = Awaited<ReturnType<typeof getSavedQueries>>;
@@ -61,12 +63,10 @@ function ProfilePageContent({user, queries} : ProfilePageContentProps) {
                     <Card className="bg-transparent">
                         <CardContent className="pt-6">
                             <div className="flex flex-col items-center text-center">
-                                <Avatar className="w-28 h-28">
-                                    <img src={user.image ?? "/avatar.png"} alt="Profile" className="w-28 h-28 rounded-full" />
-                                </Avatar>
+                                <Image src={user.image?.startsWith("http") ? user.image : "/avatar.png"} alt="Profile" width="112" height="112" className="w-28 h-28 rounded-full" />
                                 <h1 className="mt-4 text-3xl font-bold text-white">{user.name}</h1>
                                 <p className="text-white">Email: {user.email}</p>
-                                <Button variant="outline" className="w-full mt-4" onClick={() => setShowEditDialog(true)}>
+                                <Button variant="outline" className="w-full mt-4 text-md font-semibold" onClick={() => setShowEditDialog(true)}>
                                     <EditIcon className="size-4 mr-2" />
                                     Edit Profile
                                 </Button>
@@ -81,23 +81,29 @@ function ProfilePageContent({user, queries} : ProfilePageContentProps) {
                             Saved <span className="text-red-600">Trips</span>
                         </TabsTrigger>
                     </TabsList>
-                    <TabsContent value="queries" className="mt-6">
-                        <div className="space-y-6 mx-48">
-                            {queries.length > 0 ? (
-                                queries.map((query) => (
-                                    <div key={query.id} className="flex flex-col border rounded-xl w-full h-[160px]">
-                                        <div className="flex items-start justify-between">
-                                            <Link href={`/profile/${user.id}/saved-trips/${query.id}`}>
-                                                <h1 className="text-xl text-white font-semibold text-center mt-2 ml-4 border-b">{query.queryText}</h1>
-                                            </Link>
-                                            <DeleteDialog isDeleting={isDeleting} onDelete={() => handleDelete(query.id)} />
+                    <TabsContent value="queries" className="mt-6 mb-6">
+                        <div className="mx-48">
+                            <div className="space-y-6 h-[calc(100vh-540px)] overflow-y-auto pr-2">
+                                {queries.length > 0 ? (
+                                    queries.map((query) => (
+                                        <div key={query.id} className="flex flex-col border rounded-xl w-full min-h-[160px]">
+                                            <div className="flex items-start justify-between">
+                                                <Link href={`/profile/${user.id}/saved-trips/${query.id}`}>
+                                                    <h1 className="text-xl text-white font-semibold text-center mt-2 ml-4 border-b">{query.queryText}</h1>
+                                                </Link>
+                                                <DeleteDialog isDeleting={isDeleting} onDelete={() => handleDelete(query.id)} />
+                                            </div>
+                                            <div className="text-muted-foreground mx-4 mt-2 line-clamp-4">
+                                                <ReactMarkdown>
+                                                    {query.response}
+                                                </ReactMarkdown>
+                                            </div>
                                         </div>
-                                        <p className="text-muted-foreground mx-4 mt-2 line-clamp-4">{query.response}</p>
-                                    </div>
-                                ))
-                            ) : (
-                                <div className="text-center py-8 text-muted-foreground">No saved trips</div>
-                            )}
+                                    ))
+                                ) : (
+                                    <div className="text-center py-8 text-muted-foreground">No saved trips</div>
+                                )}
+                            </div>
                         </div>
                     </TabsContent>
                 </Tabs>
