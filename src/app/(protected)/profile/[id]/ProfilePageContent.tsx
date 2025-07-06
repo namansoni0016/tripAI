@@ -2,13 +2,11 @@
 
 import { deleteSavedTrip, getProfileById, getSavedQueries, updateProfile } from "@/actions/profile";
 import { DeleteDialog } from "@/components/DeleteDialog";
-import { Button } from "@/components/ui/button";
+import { EditProfileModal } from "@/components/EditProfileModal";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
-import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { EditIcon, FileTextIcon } from "lucide-react";
+import { FileTextIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -24,25 +22,7 @@ interface ProfilePageContentProps {
 }
 
 function ProfilePageContent({user, queries} : ProfilePageContentProps) {
-    const isOAuthUser = user.provider === "google";
-    const [showEditDialog, setShowEditDialog] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
-    const [editForm, setEditForm] = useState({
-        name: user.name || "",
-        email: user.email || "",
-        password: "",
-    });
-    const handleEditSubmit = async () => {
-        const formData = new FormData();
-        Object.entries(editForm).forEach(([key, value]) => {
-            formData.append(key, value);
-        });
-        const result = await updateProfile(formData);
-        if(result.success) {
-            setShowEditDialog(false);
-            toast.success("Profile updated successfully!");
-        }
-    }
     const handleDelete = async (queryId: string) => {
         if(isDeleting) return;
         try {
@@ -55,7 +35,7 @@ function ProfilePageContent({user, queries} : ProfilePageContentProps) {
         } finally {
             setIsDeleting(false);
         }
-    }
+    };
     return (
         <div className="w-full mt-10 mx-auto">
             <div className="grid grid-cols-1 gap-6">
@@ -63,13 +43,20 @@ function ProfilePageContent({user, queries} : ProfilePageContentProps) {
                     <Card className="bg-transparent">
                         <CardContent className="pt-6">
                             <div className="flex flex-col items-center text-center">
-                                <Image src={user.image?.startsWith("http") ? user.image : "/avatar.png"} alt="Profile" width="112" height="112" className="w-28 h-28 rounded-full" />
+                                <Avatar className="size-32 border-4 border-white shadow-lg">
+                                    <AvatarImage src={user.image?.startsWith("http") ? user.image : "/avatar.png"} className="object-cover" />
+                                    <AvatarFallback className="bg-blue-100 text-blue-600 text-2xl font-bold">
+                                        {user.name?.charAt(0).toUpperCase()}
+                                    </AvatarFallback>
+                                </Avatar>
                                 <h1 className="mt-4 text-3xl font-bold text-white">{user.name}</h1>
                                 <p className="text-white">Email: {user.email}</p>
-                                <Button variant="outline" className="w-full mt-4 text-md font-semibold" onClick={() => setShowEditDialog(true)}>
-                                    <EditIcon className="size-4 mr-2" />
-                                    Edit Profile
-                                </Button>
+                            </div>
+                            <div className="flex flex-col items-center space-y-4">
+                                <div className="flex justify-between items-center mt-4 w-full">
+                                    <h3 className="text-lg font-semibold text-white">Edit Profile: </h3>
+                                    <EditProfileModal user={user} />
+                                </div>
                             </div>
                         </CardContent>
                     </Card>
@@ -107,37 +94,6 @@ function ProfilePageContent({user, queries} : ProfilePageContentProps) {
                         </div>
                     </TabsContent>
                 </Tabs>
-                <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
-                    <DialogContent className="sm:max-w-[500px]">
-                        <DialogHeader>
-                            <DialogTitle className="text-2xl text-slate-700">Edit Profile</DialogTitle>
-                        </DialogHeader>
-                        <div className="space-y-4 py-4">
-                            <div className="space-y-2">
-                                <Label>Name</Label>
-                                <Input name="name" value={editForm.name} onChange={(e) => setEditForm({...editForm, name: e.target.value})} placeholder="Your name" />
-                            </div>
-                            {!isOAuthUser && (
-                                <>
-                                    <div className="space-y-2">
-                                        <Label>Email</Label>
-                                        <Input name="email" value={editForm.email} onChange={(e) => setEditForm({...editForm, email: e.target.value})} placeholder="Email address" />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label>Password</Label>
-                                        <Input name="password" type="password" onChange={(e) => setEditForm({...editForm, password: e.target.value})} placeholder="******" />
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                        <div className="flex justify-end gap-3">
-                            <DialogClose asChild>
-                                <Button variant="outline" className="rounded-2xl">Cancel</Button>
-                            </DialogClose>
-                            <Button onClick={handleEditSubmit} className="bg-slate-700 rounded-2xl">Save changes</Button>
-                        </div>
-                    </DialogContent>
-                </Dialog>
             </div>
         </div>
     )

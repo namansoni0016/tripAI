@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
+import { profileSchema } from "../../schemas";
 
 export async function getProfileById(userId: string) {
     try {
@@ -61,29 +62,22 @@ export async function getSavedQueries(userId: string) {
     }
 }
 
-export async function updateProfile(formData: FormData) {
+export async function updateProfile(data: unknown) {
+    const session = await auth();
+    if(!session || !session.user) {
+        throw new Error("Unauthorized");
+    }
     try {
-        const session = await auth();
-        if(!session || !session.user) {
-            throw new Error("Unauthorized");
-        }
-        const userId = session.user.id;
-        if(!userId) {
-            throw new Error("User ID not found!");
-        }
-        const name = formData.get("name") as string;
-        const email = formData.get("email") as string;
-        const password = formData.get("password") as string;
-        const updateData: { name: string; email: string; password?: string } = {name, email};
-        if(password && password.trim() !== "") {
-            updateData.password = await bcrypt.hash(password, 10);
-        }
-        const user = await db.user.update({
-            where: { id: userId },
-            data: updateData,
+        const validatedData = profileSchema.parse(data);
+        const updatedUser = await prisma?.user.update({
+            where: { id: session.user.id },
+            data: {
+                name: validatedData.name,
+                image: validatedData.image,
+            }
         });
-        revalidatePath(`/profile/${userId}`);
-        return { success: true, user };
+        revalidatePath(`/profile/${session.user.id}`);
+        return { success: true, user: updatedUser };
     } catch (error) {
         console.log("Error updating profile: ", error);
         return { success: false, error: "Failed to update profile" };

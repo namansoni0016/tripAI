@@ -20,3 +20,8 @@ export const LoginSchema = z.object({
         message: "Password is required"
     }),
 });
+
+export const profileSchema = z.object({
+    name: z.string().min(1, { message: "Name is required!" }),
+    image: z.string().url().or(z.literal("")).optional(),
+})

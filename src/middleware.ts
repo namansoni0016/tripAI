@@ -32,5 +32,5 @@ export default auth((req) => {
 
 //Don't invoke middleware on some paths
 export const config = {
-    matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)']
+    matcher: ["/((?!api/uploadthing|_next|.*\\..*).*)",]
 }
