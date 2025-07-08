@@ -40,11 +40,18 @@ export default function SavedTrip({ params } : SavedTripProps) {
                     </p>
                 </CardContent>
             </Card>
-            <Link href={`/profile/${userId}`}>
-                <Button variant="secondary" className="text-lg text-slate-700 font-semibold p-5 rounded-full mt-2 transition-transform duration-300 ease-in-out hover:translate-y-1">
-                    Back to Profile
-                </Button>
-            </Link>
+            <div className="flex flex-row gap-10">
+                <Link href={`/profile/${userId}`}>
+                    <Button variant="secondary" className="text-lg text-slate-700 font-semibold p-5 rounded-full mt-2 transition-transform duration-300 ease-in-out hover:translate-y-1">
+                        Back to Profile
+                    </Button>
+                </Link>
+                <Link href={`/profile/${userId}/saved-trips/${queryId}/locations`}>
+                    <Button variant="secondary" className="text-lg text-slate-700 font-semibold p-5 rounded-full mt-2 transition-transform duration-300 ease-in-out hover:translate-y-1">
+                        Show Locations
+                    </Button>
+                </Link>
+            </div>
         </div>
     )
 }

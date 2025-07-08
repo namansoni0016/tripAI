@@ -13,7 +13,11 @@ import remarkGfm from "remark-gfm";
 const AuthenticatedHome = () => {
     const { data: session } = useSession();
     const [query, setQuery] = useState("");
-    const [response, setResponse] = useState("");
+    const [response, setResponse] = useState<{
+        itinerary: string;
+        isRelated: boolean;
+        locations: string[];
+    } | null>(null);
     const [loading, setLoading] = useState(false);
     const [displayText, setDisplayText] = useState("");
     const [isSaving, setIsSaving] = useState(false);
@@ -22,17 +26,12 @@ const AuthenticatedHome = () => {
     const cardRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if(response && typeof response === 'string' && response.length > 0) {
+        if(response?.itinerary && response.itinerary.length > 0) {
             let index = 0;
             setDisplayText("");
             const interval = setInterval(() => {
-                if(index < response.length) {
-                    setDisplayText(prev => {
-                        if(index < response.length) {
-                            return prev + response[index];
-                        }
-                        return prev;
-                    });
+                if(index < response.itinerary.length) {
+                    setDisplayText(prev => prev + response.itinerary[index]);
                     index++;
                     if(cardRef.current) {
                         cardRef.current.scrollTo({
@@ -53,20 +52,28 @@ const AuthenticatedHome = () => {
             console.error("User not authenticated!");
             return;
         }
+        if(!query.trim()) return;
         setLoading(true);
-        setResponse("");
+        setResponse(null);
         setDisplayText("");
         setTextGenerated(false);
         try {
             const generatedResponse = await aiGeneration(query);
-            if(typeof generatedResponse === 'string' && generatedResponse.trim().length > 0) {
-                setResponse(generatedResponse.trim());
-            } else {
-                setResponse("Sorry, I couldn't generated a response. Please try again!");
+            setResponse(generatedResponse);
+            if(!generatedResponse.isRelated) {
+                setResponse({
+                    itinerary: generatedResponse.itinerary,
+                    isRelated: false,
+                    locations: []
+                })
             }
         } catch (error) {
             console.error("Error generating response: ", error);
-            setResponse("An error occured while generating your response!");
+            setResponse({
+                itinerary: "An error occured while generating your response!",
+                isRelated: false,
+                locations: []
+            });
         } finally {
             setLoading(false);
         }
@@ -87,11 +94,11 @@ const AuthenticatedHome = () => {
         if(!displayText.trim()) return;
         setIsSaving(true);
         try {
-            const saved = await createSavedQuery(userId, query, displayText);
+            const saved = await createSavedQuery(userId, query, displayText, response?.locations || []);
             if(saved?.success) {
                 setQuery("");
                 setDisplayText("");
-                setResponse("");
+                setResponse(null);
                 toast.success("Trip saved successfully!");
             }
         } catch (error) {
@@ -104,7 +111,7 @@ const AuthenticatedHome = () => {
     const handleClear = () => {
         setQuery("");
         setDisplayText("");
-        setResponse("");
+        setResponse(null);
     }
     return (
         <div className="flex flex-col items-center justify-center mt-4">
@@ -138,7 +145,7 @@ const AuthenticatedHome = () => {
                     </CardContent>
                 </Card>
             )}
-            {response && response !== "undefined" && (
+            {response && (
                 <div className="flex flex-col items-center">
                     <Card ref={cardRef} className="w-[800px] max-h-[460px] overflow-y-auto rounded-3xl mt-4 mb-2 border-none transition-all duration-300 shadow-lg">
                         <CardContent className="p-6 whitespace-break-spaces text-slate-700">
@@ -152,12 +159,20 @@ const AuthenticatedHome = () => {
                     </Card>
                     {textGenerated && (
                         <div className="flex space-x-4">
-                            <Button variant="secondary" onClick={handleSubmit} disabled={!displayText.trim() || isSaving} className="text-lg text-slate-700 font-semibold p-5 rounded-full mt-2 transition-transform duration-300 ease-in-out hover:translate-y-1">
-                                {isSaving ? "Saving..." : "Save Trip"}
-                            </Button>
-                            <Button variant="secondary" onClick={handleClear} className="text-lg text-slate-700 font-semibold p-5 rounded-full mt-2 transition-transform duration-300 ease-in-out hover:translate-y-1">
-                                Clear
-                            </Button>
+                            {response.isRelated ? (
+                                <div className="flex space-x-4">
+                                    <Button variant="secondary" onClick={handleSubmit} disabled={!displayText.trim() || isSaving} className="text-lg text-slate-700 font-semibold p-5 rounded-full mt-2 transition-transform duration-300 ease-in-out hover:translate-y-1">
+                                        {isSaving ? "Saving..." : "Save Trip"}
+                                    </Button>
+                                    <Button variant="secondary" onClick={handleClear} className="text-lg text-slate-700 font-semibold p-5 rounded-full mt-2 transition-transform duration-300 ease-in-out hover:translate-y-1">
+                                        Clear
+                                    </Button>
+                                </div>
+                            ) : (
+                                <Button variant="secondary" onClick={handleClear} className="text-lg text-slate-700 font-semibold p-5 rounded-full mt-2 transition-transform duration-300 ease-in-out hover:translate-y-1">
+                                    Clear
+                                </Button>
+                            )}
                         </div>
                     )}
                 </div>
