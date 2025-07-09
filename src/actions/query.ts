@@ -22,3 +22,19 @@ export async function createSavedQuery(userId: string, queryText: string, respon
         return { success: false, error: "Failed to save the generated query" };
     }
 }
+
+export const getQuery = async (queryId: string): Promise<{
+    queryText: string;
+    response: string;
+    locations: string[];
+} | null> => {
+    const result =  await prisma?.query.findUnique({
+        where: { id: queryId },
+        select: {
+            queryText: true,
+            response: true,
+            locations: true,
+        }
+    });
+    return result || null;
+};
