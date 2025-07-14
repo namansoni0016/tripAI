@@ -3,34 +3,61 @@ import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_AI_API_KEY });
 
-export const aiGeneration = async (query: string): Promise<string> => {
-    const systemPrompt = `You are a helpful AI travel assistant. Your sole purpose is to generate detailed, personalized travel itineraries for users based on their inputs.
-                        Rules:
-                        1. Only respond to queries related to travel itineraries.
-                        2. Politely decline and redirect the user if query is unrelated to travel or itinerary planning.
-                        3. Include key details such as:
-                            - Best places to visit
-                            - Optimal travel duration
-                            - Daily schedule
-                            - Budget tips
-                            - Local food and culture highlights
-                        4. Always keep your tone friendly, informative, and concise.
-                        
-                        Do not respond to jokes, personal questions, code-related promts, or anything outside the travel domain.
+interface ItineraryResponse {
+    itinerary: string;
+    isRelated: boolean;
+    locations: string[];
+}
 
-                        User query: "${query}"
-    `;
+export const aiGeneration = async(query: string) : Promise<ItineraryResponse> => {
+    const systemPrompt = `You are a travel assistant. Follow these rules STRICTLY:
+                        1. **Check if the query is travel related**:
+                            - If **NO**, return:
+                                \`\`\`json
+                                {
+                                    "itinerary": "Sorry, I can't help you with that!",
+                                    "isRelated": false,
+                                    "locations": []
+                                }
+                                \`\`\`
+                            - If **YES**, generate a **Markdown-formatted itinerary** and list locations.
+                        2. **For travel related queries**:
+                            - Format itinerary in **Markdown** (use headings, bullet points, bold text).
+                            - Include: 
+                                - **Best places to visit**
+                                - **Daily Schedule**
+                                - **Food/Culture Tips**
+                                - **Budget advice**
+                            - Extract **all locations** (cities, landmarks, places, restaurants, and every locations mentioned in itinerary).
+                        3. **Output must be valid JSON**:
+                            \`\`\`json
+                            {
+                                "itinerary": "## Tokyo 3-Day Itinerary\\n\\n**Day 1:**\\n -Visit shibuya crossing...",
+                                "isRelated": true,
+                                "locations": ["Shibuya", "Asakusa", ...] 
+                            }
+                            \`\`\`
+                        
+                        User Query: "${query}"
+                    `;
     const response = await ai.models.generateContent({
         model: "gemini-2.0-flash",
-        contents: [
-            {
-                role: "user",
-                parts: [{ text: systemPrompt }]
-            }
-        ]
+        contents: [{
+            role: "user",
+            parts: [{ text: systemPrompt }]
+        }]
     });
-    const textt = response.text ?? "";
-    return textt;
+    try {
+        const jsonString = response.text?.replace(/```json|```/g, '').trim() || '{}';
+        return JSON.parse(jsonString) as ItineraryResponse;
+    } catch (error) {
+        console.error("Failed to parse AI response: ", error);
+        return {
+            itinerary: "Error generating itinerary. Please try again.",
+            isRelated: false,
+            locations: []
+        }
+    }
 }
 
 export const generateItineraryTitle = async(query: string): Promise<string> => {

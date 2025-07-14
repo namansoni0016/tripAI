@@ -2,7 +2,7 @@
 import { db } from "@/lib/db";
 import { generateItineraryTitle } from "./gemini";
 
-export async function createSavedQuery(userId: string, queryText: string, response: string) {
+export async function createSavedQuery(userId: string, queryText: string, response: string, locations: string[]) {
     try {
         if(!userId) {
             return { success: false, error: "User Id is required" };
@@ -13,6 +13,7 @@ export async function createSavedQuery(userId: string, queryText: string, respon
                 queryText: title,
                 response,
                 userId,
+                locations,
             }
         });
         return { success: true, data: generatedQuery, message: "Trip saved successfully" };
@@ -21,3 +22,23 @@ export async function createSavedQuery(userId: string, queryText: string, respon
         return { success: false, error: "Failed to save the generated query" };
     }
 }
+
+export const getQuery = async (queryId: string): Promise<{
+    queryText: string;
+    response: string;
+    locations: string[];
+} | null> => {
+    const result =  await prisma?.query.findUnique({
+        where: { id: queryId },
+        select: {
+            queryText: true,
+            response: true,
+            locations: true,
+        }
+    });
+    return result ? {
+        queryText: result.queryText,
+        response: result.response,
+        locations: result.locations || [],
+    } : null;
+};
