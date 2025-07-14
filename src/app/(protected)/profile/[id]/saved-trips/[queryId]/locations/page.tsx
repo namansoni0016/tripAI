@@ -50,9 +50,7 @@ export default function Locations({ params } : SavedTripProps) {
     const handleLocationSelect = async (locations: string[], location: string) => {
         setSelectedLocation(location);
         try {
-            console.log(locations[0]);
             const coords = await geocodeLocation(`${location}, ${locations[0]}`);
-            console.log(coords);
             if(coords) {
                 setCoordinates(coords);
             } else {
@@ -108,7 +106,7 @@ export default function Locations({ params } : SavedTripProps) {
                             Back to Itinerary
                         </Button>
                     </Link>
-                    <Link href={``}>
+                    <Link href={coordinates ? `https://www.google.com/maps/dir/?api=1&destination=${coordinates[1]},${coordinates[0]}` : "#" } target="_blank" rel="noopener noreferrer"> 
                         <Button variant="secondary" className="text-lg text-slate-700 font-semibold p-5 rounded-full mt-2 transition-transform duration-300 ease-in-out hover:translate-y-1">
                             Show Directions
                         </Button>
