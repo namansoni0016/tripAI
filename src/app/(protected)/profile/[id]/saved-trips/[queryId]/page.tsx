@@ -1,8 +1,8 @@
 "use client";
-import { getQueryById } from "@/actions/profile";
 import { getQuery } from "@/actions/query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -46,7 +46,9 @@ export default function SavedTrip({ params } : SavedTripProps) {
     }, [queryId])
     if(loading) {
         return (
-            <div className="flex items-center justify-center mt-16 text-white text-5xl font-bold">Loading...</div>
+            <div className="flex items-center justify-center mt-16 text-white">
+                <Loader2 className="animate-spin size-16" />
+            </div>
         )
     }
     if(error) {

@@ -36,5 +36,9 @@ export const getQuery = async (queryId: string): Promise<{
             locations: true,
         }
     });
-    return result || null;
+    return result ? {
+        queryText: result.queryText,
+        response: result.response,
+        locations: result.locations || [],
+    } : null;
 };

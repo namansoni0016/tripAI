@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { SessionProvider } from "next-auth/react";
 import Navbar from "@/components/Navbar/Navbar";
-import { auth } from "@/auth";
+import 'mapbox-gl/dist/mapbox-gl.css';
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 
