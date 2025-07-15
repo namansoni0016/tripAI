@@ -22,6 +22,7 @@ import { FormSuccess } from "@/components/form-success";
 import { useRouter } from "next/navigation";
 import { getSession } from "next-auth/react";
 import { DEFAULT_LOGIN_REDIRECT } from "../../../routes";
+import { Loader2 } from "lucide-react";
 
 export const LoginForm = () => {
     const router = useRouter();
@@ -81,7 +82,11 @@ export const LoginForm = () => {
                     </div>
                     <FormError message={error || urlError} />
                     <FormSuccess message={success} />
-                    <Button disabled={isPending} type="submit" className="w-full">Log in</Button>
+                    <Button disabled={isPending} type="submit" className="w-full">
+                        {isPending ? (
+                            <Loader2 className="animate-spin" />
+                        ) : ("Log In")}
+                    </Button>
                 </form>
             </Form>
         </CardWrapper>

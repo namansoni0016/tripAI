@@ -63,51 +63,51 @@ export default function Locations({ params } : SavedTripProps) {
     }
     if(!query) {
         return (
-            <div className="flex items-center justify-center mt-16 text-white">
-                <Loader2 className="animate-spin size-16" />
+            <div className="flex items-center justify-center h-[50vh] text-white">
+                <Loader2 className="animate-spin size-12 md:size-16" />
             </div>
         );
     }
     return (
         <>
-            <div className="flex flex-col p-4 mt-4">
-                <h1 className="text-4xl font-bold text-white mb-8 text-center">{query.queryText}</h1>
-                <div className="flex flex-col lg:flex-row gap-6 w-full">
-                    <Card className="w-full lg:w-1/4 max-h-[460px] overflow-y-auto rounded-xl mb-8 border-none bg-white/10 backdrop-blur-sm">
-                        <CardContent className="p-6">
+            <div className="flex flex-col p-4 md:p-6">
+                <h1 className="text-2xl md:text-4xl font-bold text-white mb-4 md:mb-8 text-center">{query.queryText}</h1>
+                <div className="flex flex-col lg:flex-row gap-4 md:gap-6 w-full">
+                    <Card className="w-full lg:w-1/3 max-h-[300px] md:max-h-[460px] overflow-y-auto rounded-lg md:rounded-xl border-none bg-white/10 backdrop-blur-sm">
+                        <CardContent className="p-3 md:p-6">
                             {query.locations.length > 0 ? (
-                                <ul className="space-y-3">
+                                <ul className="space-y-2 md:space-y-3">
                                     {query.locations.map((location, index) => (
-                                        <li key={index} className={`text-white text-lg p-3 border-b border-white/20 hover:bg-white/10 transition-colors rounded cursor-pointer ${selectedLocation === location ? 'bg-white/20' : ''}`} onClick={() => handleLocationSelect(query.locations, location)}>
+                                        <li key={index} className={`text-sm md:text-base text-white p-2 md:p-3 border-b border-white/20 hover:bg-white/10 transition-colors rounded cursor-pointer ${selectedLocation === location ? 'bg-white/20' : ''}`} onClick={() => handleLocationSelect(query.locations, location)}>
                                             {location}
                                         </li>
                                     ))}
                                 </ul>
                             ) : (
-                                <p className="text-white text-center py-8">No locations!</p>
+                                <p className="text-white text-center py-6 md:py-8">No locations!</p>
                             )}
                         </CardContent>
                     </Card>
-                    <Card className="w-full lg:w-3/4 max-h-[460px] rounded-xl border-none overflow-hidden">
-                        <CardContent className="p-0 h-[460px]">
+                    <Card className="w-full lg:w-2/3 h-[300px] md:h-[460px] rounded-lg md:rounded-xl border-none overflow-hidden">
+                        <CardContent className="p-0 h-full">
                             {coordinates ? (
                                 <MapWithNoSSR center={coordinates} zoom={13} locationName={selectedLocation || ''} />
                             ) : (
                                 <div className="flex items-center justify-center h-full bg-white/10 text-white">
-                                    Loading...
+                                    <Loader2 className="animate-spin size-8 mr-2" />
                                 </div>
                             )}
                         </CardContent>
                     </Card>
                 </div>
-                <div className="flex flex-row gap-4">
-                    <Link href={`/profile/${userId}/saved-trips/${queryId}`}>
-                        <Button variant="secondary" className="text-lg text-slate-700 font-semibold p-5 rounded-full mt-2 transition-transform duration-300 ease-in-out hover:translate-y-1">
+                <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mt-3 w-full justify-center">
+                    <Link href={`/profile/${userId}/saved-trips/${queryId}`} className="w-full sm:w-auto">
+                        <Button variant="secondary" className="w-full text-base font-semibold md:text-lg p-3 md:p-4 rounded-full transition-transform duration-300 ease-in-out hover:translate-y-1">
                             Back to Itinerary
                         </Button>
                     </Link>
-                    <Link href={coordinates ? `https://www.google.com/maps/dir/?api=1&destination=${coordinates[1]},${coordinates[0]}` : "#" } target="_blank" rel="noopener noreferrer"> 
-                        <Button variant="secondary" className="text-lg text-slate-700 font-semibold p-5 rounded-full mt-2 transition-transform duration-300 ease-in-out hover:translate-y-1">
+                    <Link href={coordinates ? `https://www.google.com/maps/dir/?api=1&destination=${coordinates[1]},${coordinates[0]}` : "#" } target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto"> 
+                        <Button variant="secondary" className="w-full text-base font-semibold md:text-lg p-3 md:p-4 rounded-full transition-transform duration-300 ease-in-out hover:translate-y-1" disabled={!coordinates}>
                             Show Directions
                         </Button>
                     </Link>

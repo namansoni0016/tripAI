@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 export const RegisterForm = () => {
     const router = useRouter();
@@ -83,7 +84,11 @@ export const RegisterForm = () => {
                     </div>
                     <FormError message={error} />
                     <FormSuccess message={success} />
-                    <Button disabled={isPending} type="submit" className="w-full">Register</Button>
+                    <Button disabled={isPending} type="submit" className="w-full">
+                        {isPending ? (
+                            <Loader2 className="animate-spin" /> 
+                        ) : "Register"}
+                    </Button>
                 </form>
             </Form>
         </CardWrapper>

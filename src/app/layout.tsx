@@ -29,10 +29,12 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-700 to-black h-[580px] md:h-[700px]`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-700 to-black h-full overflow-hidden`}>
         <SessionProvider>
           <Navbar />
-            {children}
+            <main className="h-[calc(100%-4rem)]">
+              {children}
+            </main>
           <Toaster />
         </SessionProvider>
       </body>

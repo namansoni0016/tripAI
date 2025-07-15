@@ -2,7 +2,9 @@ import { RegisterForm } from "@/components/auth/register-form";
 
 const RegisterPage = () => {
     return (
-        <RegisterForm />
+        <div className="h-full flex items-center justify-center px-4">
+            <RegisterForm />
+        </div>
     );
 }
 
