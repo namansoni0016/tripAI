@@ -9,7 +9,9 @@ interface LogoutButtonProps {
 export const LogoutButton = ({ children }: LogoutButtonProps) => {
     const router = useRouter();
     const onClick = () => {
-        signOut();
+        signOut({
+            callbackUrl: `${window.location.origin}/auth/login`
+        });
         router.refresh();
     };
     return (
