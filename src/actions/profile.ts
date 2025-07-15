@@ -68,7 +68,7 @@ export async function updateProfile(data: unknown) {
     }
     try {
         const validatedData = profileSchema.parse(data);
-        const updatedUser = await prisma?.user.update({
+        const updatedUser = await db.user.update({
             where: { id: session.user.id },
             data: {
                 name: validatedData.name,
