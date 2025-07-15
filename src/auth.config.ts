@@ -28,4 +28,4 @@ export default {
             }
         })
     ],
-} satisfies NextAuthConfig
+} satisfies NextAuthConfig;
