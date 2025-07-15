@@ -28,7 +28,7 @@ export const getQuery = async (queryId: string): Promise<{
     response: string;
     locations: string[];
 } | null> => {
-    const result =  await prisma?.query.findUnique({
+    const result =  await db.query.findUnique({
         where: { id: queryId },
         select: {
             queryText: true,
