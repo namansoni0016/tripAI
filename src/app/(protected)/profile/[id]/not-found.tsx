@@ -9,7 +9,7 @@ export default function NotFound() {
                 <p className="text-8xl font-bold text-primary text-white">Error 404</p>
                 <div className="space-y-2">
                     <h1 className="text-3xl font-bold tracking-tight text-white">User not found!</h1>
-                    <p className="text-muted-foreground text-white">The user you're looking for doesn't exist</p>
+                    <p className="text-muted-foreground text-white">The user you&apos;re looking for doesn&apos;t exist</p>
                 </div>
                 <div className="flex mt-4 flex-col sm:flex-row gap-3 justify-center">
                     <Button variant="secondary" asChild>

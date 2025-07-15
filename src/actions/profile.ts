@@ -3,7 +3,6 @@
 import { db } from "@/lib/db";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
-import bcrypt from "bcryptjs";
 import { profileSchema } from "../../schemas";
 
 export async function getProfileById(userId: string) {

@@ -18,7 +18,7 @@ export const {handlers : { GET, POST }, auth, signIn, signOut} = NextAuth({
         }
     },
     callbacks: {
-        async signIn({ user, account }) {
+        async signIn({ account }) {
             if(account?.provider !== "credentials") return true;
             return true;
         },

@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteSavedTrip, getProfileById, getSavedQueries, updateProfile } from "@/actions/profile";
+import { deleteSavedTrip, getProfileById, getSavedQueries } from "@/actions/profile";
 import { DeleteDialog } from "@/components/DeleteDialog";
 import { EditProfileModal } from "@/components/EditProfileModal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -30,6 +30,7 @@ function ProfilePageContent({user, queries} : ProfilePageContentProps) {
             if(result.success) toast.success("Trip deleted successfully!");
             else throw new Error(result.error);
         } catch (error) {
+            console.error(error);
             toast.error("Failed to delete trip!");
         } finally {
             setIsDeleting(false);
