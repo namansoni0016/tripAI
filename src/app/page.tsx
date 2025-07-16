@@ -6,7 +6,7 @@ import { RegisterButton } from "@/components/auth/register-button";
 import AuthenticatedHome from "@/components/auth/AuthenticatedHome";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { motion } from "framer-motion";
-import { Sparkles } from "lucide-react";
+import { FaTruckPlane } from "react-icons/fa6";
 
 const font = Poppins({
   subsets: ["latin"],
@@ -44,7 +44,7 @@ export default function Home() {
                 transition={{ duration: 0.5 }}
                 className="flex flex-col items-center"
               >
-                <Sparkles className="w-8 h-8 md:w-12 md:h-12 text-red-600 mb-2 md:mb-4" />
+                <FaTruckPlane className="w-8 h-8 md:w-12 md:h-12 text-red-600 mb-2 md:mb-4" />
                 <h1 className={cn("text-3xl sm:text-4xl md:text-6xl font-bold text-white drop-shadow-md", font.className )}>
                   Welcome to <span className="text-red-600">TripAI</span>
                 </h1>
