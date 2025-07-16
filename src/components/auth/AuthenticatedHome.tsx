@@ -28,10 +28,12 @@ const AuthenticatedHome = () => {
     useEffect(() => {
         if(response?.itinerary && response.itinerary.length > 0) {
             let index = 0;
+            let text = "";
             setDisplayText("");
             const interval = setInterval(() => {
                 if(index < response.itinerary.length) {
-                    setDisplayText(prev => prev + response.itinerary[index]);
+                    text += response.itinerary.charAt(index);
+                    setDisplayText(text);
                     index++;
                     if(cardRef.current) {
                         cardRef.current.scrollTo({

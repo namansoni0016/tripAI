@@ -10,6 +10,9 @@ export default {
         Google({
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            authorization: {
+                redirect_uri: process.env.NEXTAUTH_URL + "/api/auth/callback/google",
+            }
         }),
         Credentials({
             async authorize(credentials) {
