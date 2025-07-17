@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import dynamic from 'next/dynamic';
 import { geocodeLocation } from "@/lib/geocode";
 import { Loader2 } from "lucide-react";
+import { Spinner } from "@/components/Spinner";
 
 const MapWithNoSSR = dynamic(
     () => import('@/components/Map'),
@@ -61,13 +62,7 @@ export default function Locations({ params } : SavedTripProps) {
             setCoordinates([11.1271, 78.6569]);
         }
     }
-    if(!query) {
-        return (
-            <div className="flex items-center justify-center h-[50vh] text-white">
-                <Loader2 className="animate-spin size-12 md:size-16" />
-            </div>
-        );
-    }
+    if(!query) return <Spinner />
     return (
         <>
             <div className="flex flex-col p-4 md:p-6">

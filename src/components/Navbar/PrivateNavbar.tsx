@@ -6,13 +6,15 @@ import { LogoutButton } from "../auth/logout-button";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useState } from "react";
 import { FaTimes, FaBars } from "react-icons/fa";
+import { Spinner } from "../Spinner";
 
 const PrivateNavbar = () => {
-    const user = useCurrentUser();
+    const { user, loading } = useCurrentUser();
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const closeMenu = () => {
         setIsOpen(false);
     }
+    if (loading) return <Spinner />
     return (
         <div className="relative">
             <nav className="w-full p-4 border-b border-gray-500">

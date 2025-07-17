@@ -1,5 +1,6 @@
 "use client";
 import { getQuery } from "@/actions/query";
+import { Spinner } from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
@@ -44,13 +45,7 @@ export default function SavedTrip({ params } : SavedTripProps) {
         }
         fetchQuery();
     }, [queryId])
-    if(loading) {
-        return (
-            <div className="flex items-center justify-center h-[50vh] text-white">
-                <Loader2 className="animate-spin size-12 md:size-16" />
-            </div>
-        )
-    }
+    if(loading) return <Spinner />
     if(error) {
         <div className="flex flex-col items-center justify-center h-[50vh] px-4 text-white text-center">
             <h1 className="text-3xl md:text-5xl font-bold mb-4">Error</h1>
