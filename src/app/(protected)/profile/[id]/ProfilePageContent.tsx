@@ -73,7 +73,7 @@ function ProfilePageContent({user, queries} : ProfilePageContentProps) {
                         </TabsList>
                         <TabsContent value="queries" className="mt-4 md:mt-6 mb-4 md:mb-6 flex-1 h-full overflow-hidden">
                             <div className="mx-0 sm:mx-2 h-full flex flex-col">
-                                <div className="space-y-3 md:space-y-4 flex-1 overflow-y-auto max-h-[35vh] md:max-h-[70vh] pr-2">
+                                <div className="space-y-3 md:space-y-4 flex-1 overflow-y-auto max-h-[350px] md:max-h-[520px] pr-2">
                                     {queries.length > 0 ? (
                                         queries.map((query) => (
                                             <div key={query.id} className="flex flex-col border border-white/10 rounded-lg w-full min-h-[120px] md:min-h-[140px] bg-white/5 hover:bg-white/10 transition-colors">
