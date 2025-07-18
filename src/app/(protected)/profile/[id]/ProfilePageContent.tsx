@@ -77,7 +77,7 @@ function ProfilePageContent({user, queries} : ProfilePageContentProps) {
                                     {queries.length > 0 ? (
                                         queries.map((query) => (
                                             <div key={query.id} className="flex flex-col border border-white/10 rounded-lg w-full min-h-[120px] md:min-h-[140px] bg-white/5 hover:bg-white/10 transition-colors">
-                                                <div className="flex items-start justify-between px-3 md:px-4 pt-3 md:pt-4 border-b border-white/10">
+                                                <div className="flex items-center justify-between px-3 md:px-4 border-b border-white/10">
                                                     <Link href={`/profile/${user.id}/saved-trips/${query.id}`} className="flex-1 min-w-0">
                                                         <h1 className="text-sm md:text-md text-white font-semibold flex items-center gap-2">
                                                             <MapPinIcon className="size-3 md:size-4 text-red-600" />

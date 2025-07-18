@@ -9,6 +9,13 @@ import dynamic from 'next/dynamic';
 import { geocodeLocation } from "@/lib/geocode";
 import { Loader2 } from "lucide-react";
 import { Spinner } from "@/components/Spinner";
+import { cn } from "@/lib/utils";
+import { Poppins } from "next/font/google";
+
+const font = Poppins({
+    subsets: ["latin"],
+    weight: ["600"]
+})
 
 const MapWithNoSSR = dynamic(
     () => import('@/components/Map'),
@@ -95,14 +102,28 @@ export default function Locations({ params } : SavedTripProps) {
                         </CardContent>
                     </Card>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mt-3 w-full justify-center">
+                <div className="flex flex-row gap-3 md:gap-4 mt-3 w-full justify-center">
                     <Link href={`/profile/${userId}/saved-trips/${queryId}`} className="w-full sm:w-auto">
-                        <Button variant="secondary" className="w-full text-base font-semibold md:text-lg p-3 md:p-4 rounded-full transition-transform duration-300 ease-in-out hover:translate-y-1">
+                        <Button variant="secondary" className={cn(
+                            "text-base sm:text-lg font-semibold px-4 py-3 sm:px-6 sm:py-4 rounded-full",
+                            "bg-gradient-to-r from-red-600 to-red-700 text-white",
+                            "hover:from-red-600 hover:to-red-700",
+                            "transition-all duration-300 hover:scale-[1.03] hover:shadow-lg",
+                            "shadow-md shadow-red-500/20", "mt-2",
+                            font.className
+                        )}>
                             Back to Itinerary
                         </Button>
                     </Link>
                     <Link href={coordinates ? `https://www.google.com/maps/dir/?api=1&destination=${coordinates[1]},${coordinates[0]}` : "#" } target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto"> 
-                        <Button variant="secondary" className="w-full text-base font-semibold md:text-lg p-3 md:p-4 rounded-full transition-transform duration-300 ease-in-out hover:translate-y-1" disabled={!coordinates}>
+                        <Button variant="secondary" className={cn(
+                            "text-base sm:text-lg font-semibold px-4 py-3 sm:px-6 sm:py-4 rounded-full",
+                            "bg-gradient-to-r from-red-600 to-red-700 text-white",
+                            "hover:from-red-600 hover:to-red-700",
+                            "transition-all duration-300 hover:scale-[1.03] hover:shadow-lg",
+                            "shadow-md shadow-red-500/20", "mt-2",
+                            font.className
+                        )} disabled={!coordinates}>
                             Show Directions
                         </Button>
                     </Link>

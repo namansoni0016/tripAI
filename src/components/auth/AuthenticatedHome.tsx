@@ -176,10 +176,24 @@ const AuthenticatedHome = () => {
                                 <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 w-full max-w-[800px] justify-center">
                                     {response.isRelated ? (
                                         <div className="flex space-x-4">
-                                            <Button variant="secondary" onClick={handleSubmit} disabled={!displayText.trim() || isSaving} className="text-base md:text-lg text-slate-700 font-semibold p-3 md:p-5 rounded-full mt-2 transition-transform duration-300 ease-in-out hover:translate-y-1 w-full sm:w-auto">
+                                            <Button variant="secondary" onClick={handleSubmit} disabled={!displayText.trim() || isSaving} className={cn(
+                                                "text-base sm:text-lg font-semibold px-4 py-3 sm:px-6 sm:py-4 rounded-full",
+                                                "bg-gradient-to-r from-red-600 to-red-700 text-white",
+                                                "hover:from-red-600 hover:to-red-700",
+                                                "transition-all duration-300 hover:scale-[1.03] hover:shadow-lg",
+                                                "shadow-md shadow-red-500/20", "mt-3",
+                                                font.className
+                                            )}> 
                                                 {isSaving ? "Saving..." : "Save Trip"}
                                             </Button>
-                                            <Button variant="secondary" onClick={handleClear} className="text-base md:text-lg text-slate-700 font-semibold p-3 md:p-5 rounded-full mt-2 transition-transform duration-300 ease-in-out hover:translate-y-1 w-full sm:w-auto">
+                                            <Button variant="secondary" onClick={handleClear} className={cn(
+                                                "text-base sm:text-lg font-semibold px-4 py-3 sm:px-6 sm:py-4 rounded-full",
+                                                "bg-gradient-to-r from-red-600 to-red-700 text-white",
+                                                "hover:from-red-600 hover:to-red-700",
+                                                "transition-all duration-300 hover:scale-[1.03] hover:shadow-lg",
+                                                "shadow-md shadow-red-500/20", "mt-3",
+                                                font.className
+                                            )}>
                                                 Clear
                                             </Button>
                                         </div>

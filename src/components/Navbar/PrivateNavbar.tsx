@@ -7,6 +7,13 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { useState } from "react";
 import { FaTimes, FaBars } from "react-icons/fa";
 import { Spinner } from "../Spinner";
+import { Poppins } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const font = Poppins({
+    subsets: ["latin"],
+    weight: ["600"]
+})
 
 const PrivateNavbar = () => {
     const { user, loading } = useCurrentUser();
@@ -23,11 +30,25 @@ const PrivateNavbar = () => {
                         <FaTruckPlane /> <span className="hidden sm:inline">TripAI</span>
                     </Link>
                     <div className="hidden md:flex items-center gap-4 ml-auto">
-                        <Button variant="secondary" className="text-slate-700 font-semibold px-4 py-2 rounded-full transition-transform duration-300 ease-in-out hover:translate-y-1">
-                            <Link href={`/profile/${user?.id}`} className="text-slate-700 font-semibold text-lg">Profile</Link>
+                        <Button variant="secondary" size="lg" className={cn(
+                            "text-base sm:text-lg font-semibold px-4 py-3 sm:px-6 sm:py-4 rounded-full",
+                            "bg-gradient-to-r from-red-600 to-red-700 text-white",
+                            "hover:from-red-600 hover:to-red-700",
+                            "transition-all duration-300 hover:scale-[1.03] hover:shadow-lg",
+                            "shadow-md shadow-red-500/20",
+                            font.className
+                        )}>
+                            <Link href={`/profile/${user?.id}`}>Profile</Link>
                         </Button>
                         <LogoutButton>
-                            <Button variant="secondary" className="text-lg text-slate-700 font-semibold px-4 py-2 rounded-full transition-transform duration-300 ease-in-out hover:translate-y-1" >
+                            <Button variant="secondary" size="lg" className={cn(
+                                "text-base sm:text-lg font-semibold px-4 py-3 sm:px-6 sm:py-4 rounded-full",
+                                "bg-gradient-to-r from-red-600 to-red-700 text-white",
+                                "hover:from-red-600 hover:to-red-700",
+                                "transition-all duration-300 hover:scale-[1.03] hover:shadow-lg",
+                                "shadow-md shadow-red-500/20",
+                                font.className
+                            )}>
                                 Log out
                             </Button>
                         </LogoutButton>
