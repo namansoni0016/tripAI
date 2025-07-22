@@ -37,7 +37,7 @@ function ProfilePageContent({user, queries} : ProfilePageContentProps) {
         }
     };
     return (
-        <div className="w-full min-h-screen mx-auto px-4 max-w-6xl py-4 md:py-8">
+        <div className="w-full min-h-screen mx-auto px-4 max-w-7xl py-4 md:py-8">
             <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-6 md:gap-8 h-full">
                 <div className="w-full max-w-md mx-auto md:mx-0 flex flex-col justify-center">
                     <Card className="bg-white/5 border border-white/10 rounded-xl shadow-sm">

@@ -20,12 +20,14 @@ import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { FaEyeSlash, FaEye } from "react-icons/fa";
 
 export const RegisterForm = () => {
     const router = useRouter();
     const [error, setError] = useState<string | undefined>("");
     const [success, setSuccess] = useState<string | undefined>("");
     const [isPending, startTransition] = useTransition();
+    const [showPassword, setShowPassword] = useState<boolean>();
     const form = useForm<z.infer<typeof RegisterSchema>>({
         resolver: zodResolver(RegisterSchema),
         defaultValues: {
@@ -34,6 +36,9 @@ export const RegisterForm = () => {
             password: ""
         },
     });
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    }
     const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
         setError("");
         setSuccess("");
@@ -76,7 +81,16 @@ export const RegisterForm = () => {
                             <FormItem>
                                 <FormLabel>Password</FormLabel>
                                 <FormControl>
-                                    <Input {...field} disabled={isPending} placeholder="******" type="password" />
+                                    <div className="relative">
+                                        <Input {...field} disabled={isPending} placeholder="******" type={showPassword ? "text" : "password"} className="pr-10" />
+                                        <button type="button" onClick={togglePasswordVisibility} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                                            {showPassword ? (
+                                                <FaEyeSlash className="h-5 w-5" />
+                                            ) : (
+                                                <FaEye className="h-5 w-5" />
+                                            )}
+                                        </button>
+                                    </div>
                                 </FormControl> 
                                 <FormMessage />
                             </FormItem>
