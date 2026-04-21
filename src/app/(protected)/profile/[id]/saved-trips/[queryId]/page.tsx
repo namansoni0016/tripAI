@@ -9,6 +9,7 @@ import { Poppins } from "next/font/google";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ReactMarkdown from 'react-markdown';
+import { FaDownload } from "react-icons/fa";
 
 const font = Poppins({
     subsets: ["latin"],
@@ -32,6 +33,7 @@ export default function SavedTrip({ params } : SavedTripProps) {
     const [query, setQuery] = useState<QueryData | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [pdfError, setPdfError] = useState<string | null>(null);
     useEffect(() => {
         async function fetchQuery() {
             try {
@@ -50,7 +52,15 @@ export default function SavedTrip({ params } : SavedTripProps) {
             }
         }
         fetchQuery();
-    }, [queryId])
+    }, [queryId]);
+    const handleSavePdf = async () => {
+        try {
+            setPdfError(null);
+                
+        } catch (err) {
+            setPdfError(err instanceof Error ? err.message : "Failed to generate PDF!");
+        }
+    };
     if(loading) return <Spinner />
     if(error) {
         <div className="flex flex-col items-center justify-center h-[50vh] px-4 text-white text-center">
@@ -107,6 +117,17 @@ export default function SavedTrip({ params } : SavedTripProps) {
                         </Button>
                     </Link>
                 )}
+                <Button onClick={handleSavePdf}
+                    className={cn(
+                        "text-base sm:text-lg font-semibold px-4 py-3 sm:px-6 sm:py-4 rounded-full",
+                        "bg-gradient-to-r from-red-600 to-red-700 text-white",
+                        "hover:from-red-600 hover:to-red-700",
+                        "transition-all duration-300 hover:scale-[1.03] hover:shadow-lg",
+                        "shadow-md shadow-red-500/20", "mt-2",
+                        font.className
+                    )}>
+                    <FaDownload /> Save
+                </Button>
             </div>
         </div>
     )
