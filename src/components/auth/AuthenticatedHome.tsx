@@ -9,8 +9,8 @@ import toast from "react-hot-toast";
 import { aiGeneration } from "@/actions/gemini";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { motion } from "framer-motion";
-import { FaTruckPlane } from "react-icons/fa6";
+// import { motion } from "framer-motion";
+// import { FaTruckPlane } from "react-icons/fa6";
 import { cn } from "@/lib/utils";
 import { Poppins } from "next/font/google";
 
@@ -327,7 +327,7 @@ const AuthenticatedHome = () => {
                 //     />
                 // </main>
                 <div className="flex justify-center items-center pt-20">
-                    <div className="w-[300px] h-[100px] flex items-center justify-center p-4 bg-red-400">
+                    <div className="flex items-center justify-center p-4 text-white text-4xl">
                         <h2 className="italic font-bold">We will be right back</h2>
                     </div>
                 </div>
