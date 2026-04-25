@@ -9,7 +9,6 @@ import { Poppins } from "next/font/google";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ReactMarkdown from 'react-markdown';
-import { FaDownload } from "react-icons/fa";
 
 const font = Poppins({
     subsets: ["latin"],
